@@ -1,0 +1,59 @@
+.reveal h2, .reveal h3, .reveal h4 {
+    margin-bottom: 100px;
+}
+
+.reveal em {
+    color: #555;
+}
+
+.reveal .has-dark-background em {
+    color: #fff8;
+}
+
+.reveal .has-dark-background a {
+    color: #fff8;
+}
+
+.reveal a {
+    font-size: 80%;
+}
+
+img {
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+h2 img {
+    vertical-align: -35px;
+}
+
+.reveal .slide-background-content {
+    background-size: auto;
+    background-position: bottom 10px left 10px;
+}
+
+pre.medium {
+    font-size: 14pt;
+    line-height: 1.1em;
+}
+
+.reveal pre code {
+    padding-bottom: 20px;
+}
+
+section.get-started ul {
+    list-style: none;
+    padding: 0px;
+    text-align: center;
+}
+
+section.get-started ul li:before {
+    /* content: "\25ba"; */
+    content: "\2b91";
+    position: relative;
+    left: -0.4em;
+    top: -0.1em;
+    color: #1f4e9b;
+}
+

@@ -1,0 +1,14 @@
+version: '3'
+services:
+  revealjs:
+    build: .
+    image: ia-talk
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - "./slides:/reveal.js/slides"
+      - "../..:/demo"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "~/.aws/credentials:/root/.aws/credentials"
+    environment:
+      - AWS_PROFILE

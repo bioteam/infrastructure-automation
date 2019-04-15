@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Resources:
+  WhatIsMyIP:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: index.handler
+      Runtime: python3.7
+      InlineCode: |
+        import json
+        def handler(event, context):
+          body = {'ip': event['requestContext']['identity']['sourceIp']}
+          return {'statusCode': '200', 'body': json.dumps(body)}
+      Events:
+        Web:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+
+Outputs:
+  URL:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

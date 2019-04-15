@@ -1,0 +1,18 @@
+- hosts: localhost
+  tasks:
+    - name: install postgresql
+      package: name=postgresql state=present
+
+    - name: update config file
+      lineinfile:
+        path: /etc/postgresql/9.6/main/postgresql.conf
+        regexp: '^synchronous_commit ='
+        line: 'synchronous_commit = {{ pg_sync|default("on") }}'
+      register: postgres_config
+
+    - name: set to run on boot
+      service: name=postgresql enabled=yes state=started
+
+    - name: restart service
+      service: name=postgresql state=restarted
+      when: postgres_config.changed
