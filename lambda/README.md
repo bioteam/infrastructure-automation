@@ -1,3 +1,4 @@
+# EC2 instance auto-tag Lambda function
 
 ## Prerequisites
 

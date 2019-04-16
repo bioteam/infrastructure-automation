@@ -4,10 +4,19 @@
       package: name=postgresql state=present
 
     - name: update config file
+      # The lineinfile task will ensure that a given line is present
+      # in a file, replacing an existing line if necessary.
       lineinfile:
         path: /etc/postgresql/9.6/main/postgresql.conf
+        # The regexp defines the line to be replaced.
         regexp: '^synchronous_commit ='
+        # This defines what line we want in the file. Note the
+        # variable interpolation defined by the double braces {{ }};
+        # this uses Jinja2 syntax with a filter that sets a default
+        # value if the variable is otherwise undefined.
         line: 'synchronous_commit = {{ pg_sync|default("on") }}'
+      # We register the result of this task so that we can use
+      # conditions on it later.
       register: postgres_config
 
     - name: set to run on boot
@@ -15,4 +24,8 @@
 
     - name: restart service
       service: name=postgresql state=restarted
+      # The when statement ensures that this task is skipped if the
+      # condition isn't met. In this case, the condition refers to the
+      # "update config file" task above (postgres_config) and is true
+      # only when that task registers as changed.
       when: postgres_config.changed

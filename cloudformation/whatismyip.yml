@@ -1,16 +1,35 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
+# This template uses the SAM (Serverless Application Model) transform,
+# which will expand the single resource defined below into a
+# collection of resources necessary to implement a full serverless
+# application. More information about SAM can be found at
+# https://aws.amazon.com/serverless/sam/
 Transform: "AWS::Serverless-2016-10-31"
+
 Resources:
   WhatIsMyIP:
+    # We use the AWS::Serverless::Function type here to create a
+    # Lambda function with an integrated trigger from API Gateway.
     Type: "AWS::Serverless::Function"
     Properties:
       Handler: index.handler
       Runtime: python3.7
       InlineCode: |
+        
         import json
+        # For more information about Lambda functions, see lambda/autotag.py
+        # in this repository.
         def handler(event, context):
+          print(json.dumps(event))
+          # We can retrieve the source IP address from the request context
           body = {'ip': event['requestContext']['identity']['sourceIp']}
+          # This return format is required by API Gateway
           return {'statusCode': '200', 'body': json.dumps(body)}
+
+      # The function is triggered by the event defined below. In this
+      # case, the event is a web API mounted on the root of the API
+      # Gateway deployment.
       Events:
         Web:
           Type: Api
@@ -20,4 +39,8 @@ Resources:
 
 Outputs:
   URL:
+    # The !Sub function builds a string with variable interpolation.
+    # In this case, ${ServerlessRestApi} refers to an automatically
+    # generated CloudFormation resource that SAM creates to power the
+    # Api event above.
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

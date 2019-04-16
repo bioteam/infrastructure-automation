@@ -3,22 +3,36 @@ Resources:
   StaticBucket:
     Type: "AWS::S3::Bucket"
     Properties:
+      # This bucket defines certain parameters, including a canned ACL
+      # and a website configuration to act as a static web server.
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
 
+  # In addition to the PublicRead ACL above, we additionally include a
+  # bucket policy which grants anonymous read access to all objects
+  # within this bucket.
   StaticBucketPublicPolicy:
     Type: "AWS::S3::BucketPolicy"
     Properties:
       Bucket: !Ref StaticBucket
       PolicyDocument:
+        # This is an abbreviated bucket policy document with a single
+        # statement.
         Statement:
           - Action: ["s3:GetObject"]
             Effect: Allow
+            # We use the !Sub function to combine the bucket ARN with
+            # the "/*" suffix to grant GetObject to all objects within
+            # the static bucket.
             Resource: !Sub "${StaticBucket.Arn}/*"
             Principal: "*"
 
+# The Outputs section allows for easily exposing the results of
+# specific resources. In this case, since we didn't specify the
+# BucketName of the StaticBucket above, the bucket name and URL are
+# revealed via the !Ref and !GetAtt references below.
 Outputs:
   Bucket:
     Value: !Ref StaticBucket

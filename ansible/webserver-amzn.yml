@@ -1,12 +1,27 @@
+# The tasks below will run on the host or hosts specified. Ansible
+# always has a default definition of 'localhost' (the same host
+# running Ansible); for remote hosts, an inventory file must be
+# created listing the host names and any necessary connection
+# parameters.
 - hosts: localhost
+
+  # Tasks are defined as a list of objects and are executed in sequence.
   tasks:
     - name: enable epel repo
+      # This task is required to make the nginx package available.
       command: /usr/bin/amazon-linux-extras install -y epel
       args:
+        # By defining that the command creates a certain file, Ansible
+        # will not re-run this command if this file already exists,
+        # instead marking this task as "ok".
         creates: /etc/yum.repos.d/epel.repo
         
     - name: install nginx
+      # This task defines a package installation via the state=present
+      # option.
       package: name=nginx state=present
 
     - name: set to run on boot
+      # This configures the given service to be run on boot
+      # (enabled=yes) and started (state=started).
       service: name=nginx enabled=yes state=started

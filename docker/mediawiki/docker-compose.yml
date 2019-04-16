@@ -1,16 +1,44 @@
 version: '3'
 services:
+  # This stack defines two containers - mediawiki, which hosts the web
+  # server and PHP code, and mariadb, which hosts the corresponding
+  # database.
+  
   mediawiki:
+
+    # This container comes from the official MediaWiki container.
+    # For more details, see https://hub.docker.com/_/mediawiki
     image: mediawiki
     restart: always
+
+    # We expose port 80 from this container as port 8080 on the host
+    # system. To access this MediaWiki instance, visit
+    # http://localhost:8080.
     ports: ['8080:80']
+
+    # This links the two containers together in the virtual network,
+    # so that this container can access the database using the
+    # hostname 'database'.
     links: ['database']
+
+    # The uploaded images are designated to be stored in a separate
+    # volume, so that they don't consume the limited active layer
+    # space of the container. Additionally, once configuration is
+    # complete, the LocalSettings line below should be uncommented,
+    # which brings the LocalSettings.php file into the container.
     volumes:
       - /var/www/html/images
       #- ./LocalSettings.php:/var/www/html/LocalSettings.php
+
   database:
+
+    # This container comes from the official MariaDB container.
+    # For more details, see https://hub.docker.com/_/mariadb
     image: mariadb
     restart: always
+
+    # This container is configured using environment variables. The
+    # link above gives details on these configuration options.
     environment:
       MYSQL_DATABASE: my_wiki
       MYSQL_USER: wikiuser

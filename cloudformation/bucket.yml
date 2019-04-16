@@ -1,11 +1,25 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
+# This block defines any parameters required (or optional) for this
+# stack.
 Parameters:
   BucketName:
+    # This parameter accepts any string, with a default if not
+    # explicitly specified.  
     Type: String
     Default: my-awesome-bucket
 
+# This block defines the resources that CloudFormation will create.
 Resources:
   StaticBucket:
+    # The type definition specifies what kind of resource will be
+    # created. The full list of types supported is at
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
     Type: "AWS::S3::Bucket"
+    
     Properties:
+      # The BucketName property is being defined not with a static
+      # string, but with an internal template reference. In this case,
+      # the reference points to the BucketName parameter defined
+      # above.
       BucketName: !Ref BucketName
