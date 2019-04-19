@@ -31,6 +31,8 @@ RUN git clone https://github.com/hakimel/reveal.js.git && \
     mkdir slides && \
     npm install grunt-connect-proxy
 
+RUN apt-get -y install screen
+
 # Now, add in a number of files from this repository.
 ADD gruntfile.js /reveal.js/gruntfile.js
 ADD index.html /reveal.js/index.html
